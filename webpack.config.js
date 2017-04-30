@@ -1,3 +1,4 @@
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 //const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Path = require('path');
@@ -10,31 +11,33 @@ const AppConfig = {
         'webpack-dev-server/client?http://localhost:8080/'
     ],
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
+        alias: {
+            p2: Path.resolve(__dirname, 'node_modules/phaser-ce/build/custom/p2.js'),
+            pixi: Path.resolve(__dirname, 'node_modules/phaser-ce/build/custom/pixi.js'),
+            phaser: Path.resolve(__dirname, 'node_modules/phaser-ce/build/custom/phaser-split.js')
+        }
     },
     module: {
         rules: [
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-                /*use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader'
-                })*/
-            },
-            {
-                test: /\.tsx?$/,
-                use: 'ts-loader'
-            }
+            { test: /\.tsx?$/, enforce: 'pre', loader: 'tslint-loader' },
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+            { test: /p2\.js/, use: ['expose-loader?p2'] },
+            { test: /pixi\.js/, use: ['expose-loader?PIXI'] },
+            { test: /phaser-split\.js$/, use: ['expose-loader?Phaser'] },
+            { test: /\.tsx?$/, use: ['ts-loader'] }
         ]
     },
     plugins: [
-        new Webpack.HotModuleReplacementPlugin(),
+        new CleanWebpackPlugin([
+            Path.resolve(__dirname, 'build')
+        ]),
         //new ExtractTextPlugin('styles.css'),
         new HtmlWebpackPlugin({
             title: 'Lone RPG',
-            hash: true
-        })
+            template: Path.resolve(__dirname, 'app/index.ejs')
+        }),
+        new Webpack.HotModuleReplacementPlugin()
     ]
 }
 
@@ -42,7 +45,7 @@ const WebApp = Object.assign({}, AppConfig, {
     name: 'WebApp',
     output: {
         path: Path.resolve(__dirname, 'build/app'),
-        filename: 'app.bundle.js',
+        filename: 'app.js',
         publicPath: '/'
     }
 });
@@ -51,7 +54,7 @@ const DesktopApp = Object.assign({}, AppConfig, {
     name: 'DesktopApp',
     output: {
         path: Path.resolve(__dirname, 'build/desktop/app'),
-        filename: 'app.bundle.js',
+        filename: 'app.js',
         publicPath: ''
     }
 });
@@ -68,17 +71,15 @@ module.exports = [
         },
         output: {
             path: Path.resolve(__dirname, 'build/desktop'),
-            filename: 'desktop.bundle.js',
+            filename: 'desktop.js',
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js']
         },
         module: {
             rules: [
-                {
-                    test: /\.tsx?$/,
-                    use: 'ts-loader'
-                }
+                { test: /\.tsx?$/, enforce: 'pre', loader: 'tslint-loader' },
+                { test: /\.tsx?$/, use: 'ts-loader' }
             ]
         }
     }

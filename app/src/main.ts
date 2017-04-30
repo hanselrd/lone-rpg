@@ -1,4 +1,5 @@
-import '../public/app.css';
+import "../public/app.css";
+import { Game } from "./game";
 
 class App {
     private name: string;
@@ -7,16 +8,18 @@ class App {
         this.setName(name);
     }
 
-    getName() {
+    public getName() {
         return this.name;
     }
 
-    setName(name: string) {
+    public setName(name: string) {
         this.name = name;
     }
 }
 
-const app = new App('test');
+const app = new App("test");
 console.log(app.getName());
-app.setName('test2');
+app.setName("test2");
 console.log(app.getName());
+
+const game = new Game();
