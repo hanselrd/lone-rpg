@@ -6,8 +6,8 @@ export class Play extends Phaser.State {
 
     public preload() {
         this.game.load.tilemap("world", require("../../assets/maps/world.json"), null, Phaser.Tilemap.TILED_JSON);
-        this.game.load.image("Base", require("../../assets/tilesets/base.png"));
-        this.game.load.image("City", require("../../assets/tilesets/city.png"));
+        this.game.load.spritesheet("Base", require("../../assets/tilesets/base.png"), 16, 16, -1, 0, 1);
+        this.game.load.spritesheet("City", require("../../assets/tilesets/city.png"), 16, 16, -1, 0, 1);
         this.game.load.spritesheet("dude", require("../../assets/spritesheets/dude.png"), 32, 48);
     }
 
@@ -33,7 +33,7 @@ export class Play extends Phaser.State {
 
         this.trees = this.game.add.group();
         this.trees.enableBody = true;
-        this.map.createFromObjects("Trees", 646, "tree", 0, true, true, this.trees, Phaser.Sprite, false);
+        this.map.createFromObjects("Trees", 646, "Base", 645, true, true, this.trees);
         this.trees.setAll("body.immovable", true);
         this.map.createLayer("Foreground");
 
