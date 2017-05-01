@@ -1,9 +1,10 @@
-import "../app.css";
+import "../scss/main.scss";
 import "p2";
 import "pixi";
 import "phaser";
-import { MainMenu } from "./states/main-menu";
+import "socketio";
 
-const game = new Phaser.Game(800, 600, Phaser.AUTO, "game");
-game.state.add("MainMenu", new MainMenu());
-game.state.start("MainMenu");
+const socket = io();
+socket.on("connect", () => {
+    console.log("we connected :D");
+});
