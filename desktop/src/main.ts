@@ -1,7 +1,7 @@
-import electron = require("electron");
+import * as Electron from "electron";
 
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const app = Electron.app;
+const BrowserWindow = Electron.BrowserWindow;
 let mainWindow: Electron.BrowserWindow = null;
 
 function createWindow() {
