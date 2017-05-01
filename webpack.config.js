@@ -32,7 +32,7 @@ const AppConfig = {
     },
     module: {
         rules: [
-            { test: /\.tsx?$/, enforce: "pre", loader: "tslint-loader" },
+            { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
             { test: /\.scss$/, use: ["style-loader", "css-loader", "sass-loader"] },
             { test: /p2\.js/, use: ["expose-loader?p2"] },
             { test: /pixi\.js/, use: ["expose-loader?PIXI"] },
@@ -93,7 +93,7 @@ module.exports = [
         },
         module: {
             rules: [
-                { test: /\.tsx?$/, enforce: "pre", loader: "tslint-loader" },
+                { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
                 { test: /\.tsx?$/, use: "ts-loader" }
             ]
         }
@@ -115,7 +115,7 @@ module.exports = [
         externals: nodeModules,
         module: {
             rules: [
-                { test: /\.tsx?$/, enforce: "pre", loader: "tslint-loader" },
+                { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
                 { test: /\.tsx?$/, use: "ts-loader" }
             ]
         }
