@@ -1,14 +1,15 @@
 {
   "name": "lone-rpg",
   "version": "1.0.0",
-  "description": "Lone role-playing game",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
     "build:prod": "webpack -p",
-    "electron": "electron build/desktop/desktop.js",
+    "electron": "electron build/desktop/electron.js",
+    "electron-packager": "electron-packager build/desktop --out=build/desktop/electron",
     "postinstall": "typings install",
-    "server:dev": "node server/dev",
+    "server:dev": "node server/dev.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "typings": "typings"
   },
@@ -17,10 +18,11 @@
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.16",
     "css-loader": "^0.28.0",
-    "extract-zip": "=1.6.0",
     "electron": "^1.6.6",
+    "electron-packager": "^8.6.0",
     "expose-loader": "^0.7.3",
     "extract-text-webpack-plugin": "^2.1.0",
+    "extract-zip": "=1.6.0",
     "file-loader": "^0.11.1",
     "html-webpack-plugin": "^2.28.0",
     "phaser-ce": "^2.7.7",

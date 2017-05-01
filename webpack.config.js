@@ -25,7 +25,8 @@ const AppConfig = {
             { test: /p2\.js/, use: ['expose-loader?p2'] },
             { test: /pixi\.js/, use: ['expose-loader?PIXI'] },
             { test: /phaser-split\.js$/, use: ['expose-loader?Phaser'] },
-            { test: /\.tsx?$/, use: ['ts-loader'] }
+            { test: /\.tsx?$/, use: ['ts-loader'] },
+            { test: /assets(\/|\\)/, use: ['file-loader?name=assets/[hash].[ext]'] }
         ]
     },
     plugins: [
@@ -71,7 +72,7 @@ module.exports = [
         },
         output: {
             path: Path.resolve(__dirname, 'build/desktop'),
-            filename: 'desktop.js',
+            filename: 'electron.js',
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js']
