@@ -5,7 +5,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Path = require("path");
 const Webpack = require("webpack");
 
-let nodeModules = {};
+const phaserModule = Path.resolve(__dirname, "node_modules/phaser-ce");
+
+const nodeModules = {};
 Fs.readdirSync("node_modules")
     .filter((x) => {
         return [".bin"].indexOf(x) === -1;
@@ -16,19 +18,23 @@ Fs.readdirSync("node_modules")
 
 
 const AppConfig = {
-    entry: [
-        "./app/src/main.ts",
-        "webpack/hot/dev-server",
-        "webpack-dev-server/client?http://localhost:8080/"
-    ],
+    entry: {
+        app: [
+            Path.resolve(__dirname, "app/src/main.ts"),
+            "webpack/hot/dev-server",
+            "webpack-dev-server/client?http://localhost:8080/"
+        ],
+        vendor: ["p2", "pixi", "phaser", "socketio"]
+    },
+    devtool: "cheap-source-map",
     resolve: {
-        extensions: [".ts", ".tsx", ".js"],
         alias: {
-            p2: Path.resolve(__dirname, "node_modules/phaser-ce/build/custom/p2.js"),
-            pixi: Path.resolve(__dirname, "node_modules/phaser-ce/build/custom/pixi.js"),
-            phaser: Path.resolve(__dirname, "node_modules/phaser-ce/build/custom/phaser-split.js"),
+            p2: Path.resolve(phaserModule, "build/custom/p2.js"),
+            pixi: Path.resolve(phaserModule, "build/custom/pixi.js"),
+            phaser: Path.resolve(phaserModule, "build/custom/phaser-split.js"),
             socketio: Path.resolve(__dirname, "node_modules/socket.io-client/dist/socket.io.js")
-        }
+        },
+        extensions: [".ts", ".tsx", ".js"]
     },
     module: {
         rules: [
@@ -46,21 +52,26 @@ const AppConfig = {
         new CleanWebpackPlugin([
             Path.resolve(__dirname, "build")
         ]),
+        new Webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            filename: "js/vendor.min-[hash:6].js",
+            minChunks: Infinity
+        }),
         //new ExtractTextPlugin("styles.css"),
         new HtmlWebpackPlugin({
             title: "Lone RPG",
             template: Path.resolve(__dirname, "app/index.ejs")
         }),
-        new Webpack.HotModuleReplacementPlugin(),
-        //new Webpack.NoErrorsPlugin()
+        //new Webpack.NoErrorsPlugin(),
+        new Webpack.HotModuleReplacementPlugin()
     ]
-}
+};
 
 const WebApp = Object.assign({}, AppConfig, {
     name: "WebApp",
     output: {
         path: Path.resolve(__dirname, "build/app"),
-        filename: "app.js",
+        filename: "js/app.min-[hash:6].js",
         publicPath: "/"
     }
 });
@@ -69,7 +80,7 @@ const DesktopApp = Object.assign({}, AppConfig, {
     name: "DesktopApp",
     output: {
         path: Path.resolve(__dirname, "build/desktop/app"),
-        filename: "app.js",
+        filename: "js/app.min-[hash:6].js",
         publicPath: ""
     }
 });
@@ -78,7 +89,7 @@ module.exports = [
     WebApp,
     DesktopApp,
     {
-        entry: "./desktop/src/main.ts",
+        entry: Path.resolve(__dirname, "desktop/src/main.ts"),
         target: "electron",
         node: {
             __dirname: false,
@@ -99,7 +110,7 @@ module.exports = [
         }
     },
     {
-        entry: "./server/src/main.ts",
+        entry: Path.resolve(__dirname, "server/src/main.ts"),
         target: "node",
         node: {
             __dirname: false,
