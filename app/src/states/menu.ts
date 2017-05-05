@@ -2,11 +2,11 @@ export class Menu extends Phaser.State {
     private playKey: Phaser.Key;
     private playButton: Phaser.Button;
 
-    public preload() {
+    public preload(): void {
         this.load.image("background", require("../../assets/backgrounds/bg-800x600.png"));
     }
 
-    public create() {
+    public create(): void {
         this.playKey = this.input.keyboard.addKey(Phaser.KeyCode.ENTER);
         this.add.sprite(0, 0, "background");
         this.add.text(30, 30, "Press [ENTER] to Play!", {
@@ -19,7 +19,7 @@ export class Menu extends Phaser.State {
         // this.playButton.fixedToCamera = true;
     }
 
-    public update() {
+    public update(): void {
         if (this.playKey.isDown) {
             this.state.start("play");
         }

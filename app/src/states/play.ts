@@ -4,27 +4,21 @@ export class Play extends Phaser.State {
     private coordsText: Phaser.Text;
     private cursors: Phaser.CursorKeys;
     private map: Phaser.Tilemap;
-    private players: Map<string, Player>;
+    private player: Player;
     private trees: Phaser.Group;
-    private socket: SocketIOClient.Socket;
 
-    constructor(socket: SocketIOClient.Socket) {
-        super();
-        this.socket = socket;
-    }
-
-    public init() {
+    public init(): void {
         this.stage.disableVisibilityChange = true;
     }
 
-    public preload() {
+    public preload(): void {
         this.load.tilemap("world", require("../../assets/maps/world.json"), null, Phaser.Tilemap.TILED_JSON);
         this.load.spritesheet("Base", require("../../assets/tilesets/base.png"), 16, 16, -1, 0, 1);
         this.load.spritesheet("City", require("../../assets/tilesets/city.png"), 16, 16, -1, 0, 1);
         this.load.spritesheet("dude", require("../../assets/spritesheets/dude.png"), 32, 48);
     }
 
-    public create() {
+    public create(): void {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -39,97 +33,46 @@ export class Play extends Phaser.State {
         this.trees.enableBody = true;
         this.map.createFromObjects("Trees", 646, "Base", 645, true, true, this.trees);
         this.trees.setAll("body.immovable", true);
+
+        this.player = new Player(this.game, 100, 300);
+
         this.map.createLayer("Foreground");
 
         this.coordsText = this.add.text(0, 0, "");
         this.coordsText.fixedToCamera = true;
-
-        this.players = new Map<string, Player>();
-
-        this.socket.emit("addPlayer");
-
-        this.socket.on("addPlayer", (id: string, x: number, y: number) => {
-            this.addPlayer(id, x, y);
-        });
-
-        this.socket.on("addAllPlayers", (data: Map<string, [number, number]>) => {
-            for (const id in data) {
-                this.addPlayer(id, data[id][0], data[id][1]);
-            }
-            console.log(data);
-        });
-
-        this.socket.on("movePlayer", (id: string, x: number, y: number) => {
-            this.movePlayer(id, x, y);
-        });
-
-        this.socket.on("removePlayer", (id: string) => {
-            this.removePlayer(id);
-        });
     }
 
-    public update() {
-        if (this.players[this.socket.id]) {
-            this.physics.arcade.collide(this.players[this.socket.id].sprite, this.trees);
+    public update(): void {
+        if (this.player) {
+            this.physics.arcade.collide(this.player.sprite, this.trees);
 
-            this.players[this.socket.id].sprite.body.velocity.x = 0;
-            this.players[this.socket.id].sprite.body.velocity.y = 0;
+            this.player.update();
 
-            this.coordsText.text = `(${this.players[this.socket.id].sprite.body.position.x}, ${this.players[this.socket.id].sprite.body.position.y})`;
+            this.coordsText.text = `(${this.player.sprite.body.position.x}, ${this.player.sprite.body.position.y})`;
 
             if (this.cursors.left.isDown) {
-                this.players[this.socket.id].sprite.body.velocity.x = -150;
-                this.players[this.socket.id].sprite.animations.play("left");
+                this.player.move(-150, 0);
             }
 
             if (this.cursors.up.isDown) {
-                this.players[this.socket.id].sprite.body.velocity.y = -150;
+                this.player.move(0, -150);
             }
 
             if (this.cursors.right.isDown) {
-                this.players[this.socket.id].sprite.body.velocity.x = 150;
-                this.players[this.socket.id].sprite.animations.play("right");
+                this.player.move(150, 0);
             }
 
             if (this.cursors.down.isDown) {
-                this.players[this.socket.id].sprite.body.velocity.y = 150;
+                this.player.move(0, 150);
             }
 
             if (this.cursors.left.isUp &&
                 this.cursors.up.isUp &&
                 this.cursors.right.isUp &&
                 this.cursors.down.isUp) {
-                    this.players[this.socket.id].sprite.animations.stop();
-                    this.players[this.socket.id].sprite.animations.frame = 4;
-                }
-
-            //this.socket.emit("movePlayer", this.players[this.socket.id].sprite.worldPosition.x,
-            //    this.players[this.socket.id].sprite.worldPosition.y);
+                this.player.sprite.animations.stop();
+                this.player.sprite.animations.frame = 4;
+            }
         }
-    }
-
-    public addPlayer(id: string, x: number, y: number) {
-        if (id === this.socket.id) {
-            this.players[id] = new Player(this.game, x, y, true);
-        } else {
-            this.players[id] = new Player(this.game, x, y, false);
-        }
-    }
-
-    public movePlayer(id: string, x: number, y: number) {
-        /*const player = this.players[id];
-        const tween = this.add.tween(player);
-        const distance = Phaser.Math.distance(player.sprite.position.x, player.sprite.position.y, x, y);
-        const duration = distance * 10;
-        tween.to({ x, y }, duration);
-        tween.start();*/
-        const player = this.players[id];
-        player.sprite.position = x;
-        player.sprite.position = y;
-    }
-
-    public removePlayer(id: string) {
-        this.players[id].sprite.destroy();
-        delete this.players[id];
     }
 }

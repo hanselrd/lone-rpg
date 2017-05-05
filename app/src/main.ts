@@ -7,9 +7,11 @@ import "socketio";
 
 import { Game } from "./game";
 
+/*
 const socket = io();
 socket.on("connect", () => {
     console.log("Connected to server");
 });
+*/
 
-const game = new Game(socket);
+const game = new Game();
