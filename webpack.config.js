@@ -1,4 +1,5 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");
 const Fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Path = require("path");
@@ -38,11 +39,12 @@ const App = {
         rules: [
             { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
             { test: /\.scss$/, use: ["style-loader", "css-loader", "sass-loader"] },
-            { test: /\.css$/, use: ["style-loader", "css-loader"]},
+            { test: /\.css$/, use: ExtractTextWebpackPlugin.extract({ fallback: "style-loader", use: "css-loader" }) },
             { test: /p2\.js/, use: ["expose-loader?p2"] },
             { test: /pixi\.js/, use: ["expose-loader?PIXI"] },
             { test: /phaser-split\.js$/, use: ["expose-loader?Phaser"] },
             { test: /socket.io\.js$/, use: ["expose-loader?io"] },
+            { test: /bootstrap\.js$/, use: ["imports-loader?$=jquery,jquery=jquery,jQuery=jquery,tether=tether,Tether=tether,this=>window"] },
             { test: /\.tsx?$/, use: ["ts-loader"] },
             { test: /assets(\/|\\)/, use: ["file-loader?name=assets/[hash].[ext]"] }
         ]
@@ -69,18 +71,12 @@ const WebApp = Object.assign({}, App, {
             Path.resolve(__dirname, "build"),
             Path.resolve(__dirname, "docs")
         ]),
-        new Webpack.ProvidePlugin({
-            $: "jquery",
-            jquery: "jquery",
-            jQuery: "jquery",
-            tether: "tether",
-            Tether: "tether"
-        }),
         new Webpack.optimize.CommonsChunkPlugin({
             name: "vendor",
             filename: "js/vendor.min-[hash:6].js",
             minChunks: Infinity
         }),
+        new ExtractTextWebpackPlugin("css/vendor.min-[hash:6].css"),
         new HtmlWebpackPlugin({
             title: "Lone RPG",
             template: Path.resolve(__dirname, "app/index.ejs")
@@ -112,6 +108,7 @@ const DesktopApp = Object.assign({}, App, {
             filename: "js/vendor.min-[hash:6].js",
             minChunks: Infinity
         }),
+        new ExtractTextWebpackPlugin("css/vendor.min-[hash:6].css"),
         new HtmlWebpackPlugin({
             title: "Lone RPG",
             template: Path.resolve(__dirname, "app/index.ejs")
@@ -165,14 +162,16 @@ const Server = {
 }
 
 module.exports = function(env) {
-    if (env.buildWebAppOnly) {
-        return WebApp;
-    } else if (env.buildDesktopAppOnly) {
-        return DesktopApp;
-    } else if (env.buildElectronOnly) {
-        return Electron;
-    } else if (env.buildServerOnly) {
-        return Server;
+    if (env) {
+        if (env.buildWebAppOnly) {
+            return WebApp;
+        } else if (env.buildDesktopAppOnly) {
+            return DesktopApp;
+        } else if (env.buildElectronOnly) {
+            return Electron;
+        } else if (env.buildServerOnly) {
+            return Server;
+        }
     } else {
         return [
             WebApp,
