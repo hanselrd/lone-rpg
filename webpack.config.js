@@ -17,14 +17,6 @@ Fs.readdirSync("node_modules")
 
 
 const App = {
-    entry: {
-        app: [
-            Path.resolve(__dirname, "app/src/main.ts"),
-            "webpack/hot/dev-server",
-            "webpack-dev-server/client?http://localhost:8080/"
-        ],
-        vendor: ["p2", "pixi", "phaser", "socketio"]
-    },
     devtool: "cheap-source-map",
     resolve: {
         alias: {
@@ -46,6 +38,23 @@ const App = {
             { test: /\.tsx?$/, use: ["ts-loader"] },
             { test: /assets(\/|\\)/, use: ["file-loader?name=assets/[hash].[ext]"] }
         ]
+    }
+}
+
+const WebApp = Object.assign({}, App, {
+    name: "WebApp",
+    entry: {
+        app: [
+            Path.resolve(__dirname, "app/src/main.ts"),
+            "webpack/hot/dev-server",
+            "webpack-dev-server/client?http://localhost:8080/"
+        ],
+        vendor: ["p2", "pixi", "phaser", "socketio"]
+    },
+    output: {
+        path: Path.resolve(__dirname, "build/app"),
+        filename: "js/app.min-[hash:6].js",
+        publicPath: "/"
     },
     plugins: [
         new CleanWebpackPlugin([
@@ -63,24 +72,36 @@ const App = {
         }),
         new Webpack.HotModuleReplacementPlugin()
     ]
-}
-
-const WebApp = Object.assign({}, App, {
-    name: "WebApp",
-    output: {
-        path: Path.resolve(__dirname, "build/app"),
-        filename: "js/app.min-[hash:6].js",
-        publicPath: "/"
-    }
 });
 
 const DesktopApp = Object.assign({}, App, {
     name: "DesktopApp",
+    entry: {
+        app: [
+            Path.resolve(__dirname, "app/src/main.ts")
+        ],
+        vendor: ["p2", "pixi", "phaser", "socketio"]
+    },
     output: {
         path: Path.resolve(__dirname, "build/desktop/app"),
         filename: "js/app.min-[hash:6].js",
         publicPath: ""
-    }
+    },
+    plugins: [
+        new CleanWebpackPlugin([
+            Path.resolve(__dirname, "build"),
+            Path.resolve(__dirname, "docs")
+        ]),
+        new Webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            filename: "js/vendor.min-[hash:6].js",
+            minChunks: Infinity
+        }),
+        new HtmlWebpackPlugin({
+            title: "Lone RPG",
+            template: Path.resolve(__dirname, "app/index.ejs")
+        })
+    ]
 });
 
 const Electron = {
