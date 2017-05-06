@@ -1,11 +1,12 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-//const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const Fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Path = require("path");
 const Webpack = require("webpack");
 
-let nodeModules = {};
+const phaserModule = Path.resolve(__dirname, "node_modules/phaser-ce");
+
+const nodeModules = {};
 Fs.readdirSync("node_modules")
     .filter((x) => {
         return [".bin"].indexOf(x) === -1;
@@ -15,20 +16,24 @@ Fs.readdirSync("node_modules")
     });
 
 
-const AppConfig = {
-    entry: [
-        "./app/src/main.ts",
-        "webpack/hot/dev-server",
-        "webpack-dev-server/client?http://localhost:8080/"
-    ],
+const App = {
+    entry: {
+        app: [
+            Path.resolve(__dirname, "app/src/main.ts"),
+            "webpack/hot/dev-server",
+            "webpack-dev-server/client?http://localhost:8080/"
+        ],
+        vendor: ["p2", "pixi", "phaser", "socketio"]
+    },
+    devtool: "cheap-source-map",
     resolve: {
-        extensions: [".ts", ".tsx", ".js"],
         alias: {
-            p2: Path.resolve(__dirname, "node_modules/phaser-ce/build/custom/p2.js"),
-            pixi: Path.resolve(__dirname, "node_modules/phaser-ce/build/custom/pixi.js"),
-            phaser: Path.resolve(__dirname, "node_modules/phaser-ce/build/custom/phaser-split.js"),
+            p2: Path.resolve(phaserModule, "build/custom/p2.js"),
+            pixi: Path.resolve(phaserModule, "build/custom/pixi.js"),
+            phaser: Path.resolve(phaserModule, "build/custom/phaser-split.js"),
             socketio: Path.resolve(__dirname, "node_modules/socket.io-client/dist/socket.io.js")
-        }
+        },
+        extensions: [".ts", ".tsx", ".js"]
     },
     module: {
         rules: [
@@ -44,80 +49,100 @@ const AppConfig = {
     },
     plugins: [
         new CleanWebpackPlugin([
-            Path.resolve(__dirname, "build")
+            Path.resolve(__dirname, "build"),
+            Path.resolve(__dirname, "docs")
         ]),
-        //new ExtractTextPlugin("styles.css"),
+        new Webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            filename: "js/vendor.min-[hash:6].js",
+            minChunks: Infinity
+        }),
         new HtmlWebpackPlugin({
             title: "Lone RPG",
             template: Path.resolve(__dirname, "app/index.ejs")
         }),
-        new Webpack.HotModuleReplacementPlugin(),
-        //new Webpack.NoErrorsPlugin()
+        new Webpack.HotModuleReplacementPlugin()
     ]
 }
 
-const WebApp = Object.assign({}, AppConfig, {
+const WebApp = Object.assign({}, App, {
     name: "WebApp",
     output: {
         path: Path.resolve(__dirname, "build/app"),
-        filename: "app.js",
+        filename: "js/app.min-[hash:6].js",
         publicPath: "/"
     }
 });
 
-const DesktopApp = Object.assign({}, AppConfig, {
+const DesktopApp = Object.assign({}, App, {
     name: "DesktopApp",
     output: {
         path: Path.resolve(__dirname, "build/desktop/app"),
-        filename: "app.js",
+        filename: "js/app.min-[hash:6].js",
         publicPath: ""
     }
 });
 
-module.exports = [
-    WebApp,
-    DesktopApp,
-    {
-        entry: "./desktop/src/main.ts",
-        target: "electron",
-        node: {
-            __dirname: false,
-            __filename: false
-        },
-        output: {
-            path: Path.resolve(__dirname, "build/desktop"),
-            filename: "electron.js",
-        },
-        resolve: {
-            extensions: [".ts", ".tsx", ".js"]
-        },
-        module: {
-            rules: [
-                { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
-                { test: /\.tsx?$/, use: "ts-loader" }
-            ]
-        }
+const Electron = {
+    entry: Path.resolve(__dirname, "desktop/src/main.ts"),
+    target: "electron",
+    node: {
+        __dirname: false,
+        __filename: false
     },
-    {
-        entry: "./server/src/main.ts",
-        target: "node",
-        node: {
-            __dirname: false,
-            __filename: false
-        },
-        output: {
-            path: Path.resolve(__dirname, "build"),
-            filename: "server.js",
-        },
-        resolve: {
-            extensions: [".ts", ".tsx", ".js"]
-        },
-        externals: nodeModules,
-        module: {
-            rules: [
-                { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
-                { test: /\.tsx?$/, use: "ts-loader" }
-            ]
-        }
+    output: {
+        path: Path.resolve(__dirname, "build/desktop"),
+        filename: "electron.js",
+    },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js"]
+    },
+    module: {
+        rules: [
+            { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
+            { test: /\.tsx?$/, use: "ts-loader" }
+        ]
     }
-]
+}
+
+const Server = {
+    entry: Path.resolve(__dirname, "server/src/main.ts"),
+    target: "node",
+    node: {
+        __dirname: false,
+        __filename: false
+    },
+    output: {
+        path: Path.resolve(__dirname, "build"),
+        filename: "server.js",
+    },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js"]
+    },
+    externals: nodeModules,
+    module: {
+        rules: [
+            { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
+            { test: /\.tsx?$/, use: "ts-loader" }
+        ]
+    }
+}
+
+module.exports = function(env) {
+    if (env.buildWebAppOnly) {
+        return WebApp;
+    } else if (env.buildDesktopAppOnly) {
+        return DesktopApp;
+    } else if (env.buildElectronOnly) {
+        return Electron;
+    } else if (env.buildServerOnly) {
+        return Server;
+    } else {
+        return [
+            WebApp,
+            DesktopApp,
+            Electron,
+            Server
+        ]
+    }
+}
