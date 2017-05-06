@@ -1,11 +1,11 @@
 const Webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
-const config = require("./webpack.config");
+const Config = require("./webpack.config")({ buildWebAppOnly: true });
 
-new WebpackDevServer(Webpack(config[0]), {
+new WebpackDevServer(Webpack(Config), {
     hot: true,
     inline: true,
-    contentBase: config[0].output.path
+    contentBase: Config.output.path
 }).listen(8080, "localhost", (err) => {
     if (err) console.log(err);
 });

@@ -6,6 +6,8 @@
   "scripts": {
     "build": "webpack",
     "build:prod": "webpack -p",
+    "build:webapp": "webpack -p --env.buildWebAppOnly",
+    "build:docs": "npm run build:webapp && cp -R build/app/ docs/",
     "webpack:watch": "webpack --watch --progress",
     "electron": "electron build/desktop/electron.js",
     "electron-packager": "electron-packager build/desktop --out=build/desktop/electron",

@@ -1,5 +1,4 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-//const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const Fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Path = require("path");
@@ -17,7 +16,7 @@ Fs.readdirSync("node_modules")
     });
 
 
-const AppConfig = {
+const App = {
     entry: {
         app: [
             Path.resolve(__dirname, "app/src/main.ts"),
@@ -50,24 +49,23 @@ const AppConfig = {
     },
     plugins: [
         new CleanWebpackPlugin([
-            Path.resolve(__dirname, "build")
+            Path.resolve(__dirname, "build"),
+            Path.resolve(__dirname, "docs")
         ]),
         new Webpack.optimize.CommonsChunkPlugin({
             name: "vendor",
             filename: "js/vendor.min-[hash:6].js",
             minChunks: Infinity
         }),
-        //new ExtractTextPlugin("styles.css"),
         new HtmlWebpackPlugin({
             title: "Lone RPG",
             template: Path.resolve(__dirname, "app/index.ejs")
         }),
-        //new Webpack.NoErrorsPlugin(),
         new Webpack.HotModuleReplacementPlugin()
     ]
-};
+}
 
-const WebApp = Object.assign({}, AppConfig, {
+const WebApp = Object.assign({}, App, {
     name: "WebApp",
     output: {
         path: Path.resolve(__dirname, "build/app"),
@@ -76,7 +74,7 @@ const WebApp = Object.assign({}, AppConfig, {
     }
 });
 
-const DesktopApp = Object.assign({}, AppConfig, {
+const DesktopApp = Object.assign({}, App, {
     name: "DesktopApp",
     output: {
         path: Path.resolve(__dirname, "build/desktop/app"),
@@ -85,50 +83,66 @@ const DesktopApp = Object.assign({}, AppConfig, {
     }
 });
 
-module.exports = [
-    WebApp,
-    DesktopApp,
-    {
-        entry: Path.resolve(__dirname, "desktop/src/main.ts"),
-        target: "electron",
-        node: {
-            __dirname: false,
-            __filename: false
-        },
-        output: {
-            path: Path.resolve(__dirname, "build/desktop"),
-            filename: "electron.js",
-        },
-        resolve: {
-            extensions: [".ts", ".tsx", ".js"]
-        },
-        module: {
-            rules: [
-                { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
-                { test: /\.tsx?$/, use: "ts-loader" }
-            ]
-        }
+const Electron = {
+    entry: Path.resolve(__dirname, "desktop/src/main.ts"),
+    target: "electron",
+    node: {
+        __dirname: false,
+        __filename: false
     },
-    {
-        entry: Path.resolve(__dirname, "server/src/main.ts"),
-        target: "node",
-        node: {
-            __dirname: false,
-            __filename: false
-        },
-        output: {
-            path: Path.resolve(__dirname, "build"),
-            filename: "server.js",
-        },
-        resolve: {
-            extensions: [".ts", ".tsx", ".js"]
-        },
-        externals: nodeModules,
-        module: {
-            rules: [
-                { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
-                { test: /\.tsx?$/, use: "ts-loader" }
-            ]
-        }
+    output: {
+        path: Path.resolve(__dirname, "build/desktop"),
+        filename: "electron.js",
+    },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js"]
+    },
+    module: {
+        rules: [
+            { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
+            { test: /\.tsx?$/, use: "ts-loader" }
+        ]
     }
-]
+}
+
+const Server = {
+    entry: Path.resolve(__dirname, "server/src/main.ts"),
+    target: "node",
+    node: {
+        __dirname: false,
+        __filename: false
+    },
+    output: {
+        path: Path.resolve(__dirname, "build"),
+        filename: "server.js",
+    },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js"]
+    },
+    externals: nodeModules,
+    module: {
+        rules: [
+            { test: /\.tsx?$/, enforce: "pre", use: "tslint-loader" },
+            { test: /\.tsx?$/, use: "ts-loader" }
+        ]
+    }
+}
+
+module.exports = function(env) {
+    if (env.buildWebAppOnly) {
+        return WebApp;
+    } else if (env.buildDesktopAppOnly) {
+        return DesktopApp;
+    } else if (env.buildElectronOnly) {
+        return Electron;
+    } else if (env.buildServerOnly) {
+        return Server;
+    } else {
+        return [
+            WebApp,
+            DesktopApp,
+            Electron,
+            Server
+        ]
+    }
+}

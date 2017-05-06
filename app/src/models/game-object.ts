@@ -5,7 +5,5 @@ export abstract class GameObject {
         this.game = game;
     }
 
-    public abstract update();
-
-    public abstract move(offsetX: number, offsetY?: number);
+    public abstract update(): void;
 }
