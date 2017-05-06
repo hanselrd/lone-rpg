@@ -20,6 +20,7 @@
   "author": "hanselrd",
   "license": "MIT",
   "devDependencies": {
+    "bootstrap": "^4.0.0-alpha.6",
     "clean-webpack-plugin": "^0.1.16",
     "css-loader": "^0.28.0",
     "electron": "^1.6.6",
