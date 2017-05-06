@@ -13,7 +13,7 @@
     "electron": "electron build/desktop/electron.js",
     "electron-packager": "electron-packager build/desktop --out=build/desktop/electron",
     "postinstall": "typings install",
-    "server:dev": "node webpack-dev-server.js",
+    "server:dev": "node webpack/dev-server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "typings": "typings"
   },
