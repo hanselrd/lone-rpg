@@ -1,7 +1,7 @@
 import { Boot } from "./states/boot";
-import { Preloader } from "./states/preloader";
 import { Menu } from "./states/menu";
 import { Play } from "./states/play";
+import { Preloader } from "./states/preloader";
 
 export class Game {
     private game: Phaser.Game;
