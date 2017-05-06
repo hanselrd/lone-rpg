@@ -1,6 +1,6 @@
 # Lone Role-Playing Game!
 
-Lone is an RPG based around a farming era where you must embark on a journey to accrue a plethora of wealth and build your empire. The game is still under development but you can find the demo right here on [GitHub!](https://hanselrd.github.io/lone-rpg/).
+Lone is an RPG based around a farming era where you must embark on a journey to accrue a plethora of wealth and build your empire. The game is still under development but you can find the demo right here on [GitHub](https://hanselrd.github.io/lone-rpg/)!
 
 ## Installation
 
