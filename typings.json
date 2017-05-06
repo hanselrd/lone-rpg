@@ -2,6 +2,7 @@
   "globalDependencies": {
     "electron": "registry:dt/electron#1.4.8+20170316233216",
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160726072212",
+    "jquery": "registry:dt/jquery#1.10.0+20170310222111",
     "node": "registry:dt/node#7.0.0+20170322231424",
     "phaser": "github:photonstorm/phaser-ce/typescript/typings.json",
     "socket.io": "registry:dt/socket.io#1.4.4+20170313110830",

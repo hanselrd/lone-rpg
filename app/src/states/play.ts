@@ -32,6 +32,6 @@ export class Play extends Phaser.State {
     public update(): void {
         this.physics.arcade.collide(this.player.sprite, this.trees);
         this.player.update();
-        this.coordsText.text = `(${this.player.sprite.body.position.x}, ${this.player.sprite.body.position.y})`;
+        this.coordsText.text = `(${Math.floor(this.player.sprite.body.position.x)}, ${Math.floor(this.player.sprite.body.position.y)})`;
     }
 }
