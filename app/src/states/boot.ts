@@ -9,13 +9,13 @@ export class Boot extends Phaser.State {
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             this.scale.setMinMax(480, 260, 1024, 768);
             this.scale.forceLandscape = true;
-            this.scale.pageAlignHorizontally;
+            this.scale.pageAlignHorizontally = true;
         }
     }
 
     public preload(): void {
-        this.load.image("background", require("../../assets/backgrounds/bg-800x600.png"));
-        this.load.image("preloadBar", require("../../assets/spritesheets/dude.png"));
+        this.load.image("background", require("../../assets/images/bg-800x600.png"));
+        this.load.image("preloadBar", require("../../assets/images/preload.png"));
     }
 
     public create(): void {
