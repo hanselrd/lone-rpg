@@ -1,5 +1,5 @@
-import Game from "@/components/Game";
-import Hello from "@/components/Hello";
+import Game from "@/components/game";
+import Hello from "@/components/hello";
 import Vue from "vue";
 import Router from "vue-router";
 

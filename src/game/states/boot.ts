@@ -1,6 +1,3 @@
-// import background from "@/assets/images/bg-1366x768.png";
-// import preloadBar from "@/assets/images/preload.png";
-
 export default class Boot extends Phaser.State {
   public init(): void {
     this.input.maxPointers = 1;
@@ -16,11 +13,11 @@ export default class Boot extends Phaser.State {
   }
 
   public preload(): void {
-    // this.load.image("background", background);
-    // this.load.image("preloadBar", preloadBar);
+    this.load.image("background", require("@/assets/images/bg-1366x768.png"));
+    this.load.image("preloadBar", require("@/assets/images/preload.png"));
   }
 
   public create(): void {
-    // this.state.start("preloader");
+    this.state.start("preloader");
   }
 }
