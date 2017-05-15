@@ -1,5 +1,5 @@
 <template>
-  <div class="game"></div>
+  <div id="game"></div>
 </template>
 
 <script lang="ts">
@@ -23,7 +23,7 @@
     game: Phaser.Game = new Phaser.Game(window.innerWidth * window.devicePixelRatio,
           window.innerHeight * devicePixelRatio, Phaser.AUTO, this.$el);
 
-    created() {
+    mounted() {
       if (this.game !== null) {
         this.game.state.add("Boot", new Boot());
         //this.game.state.add("Preloader", new Preloader());

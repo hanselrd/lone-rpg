@@ -1,0 +1,7 @@
+{
+  "name": "lone-rpg",
+  "dependencies": {},
+  "globalDevDependencies": {
+    "phaser": "github:photonstorm/phaser-ce/typescript/typings.json"
+  }
+}

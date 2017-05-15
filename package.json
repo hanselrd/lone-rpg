@@ -15,8 +15,6 @@
   },
   "devDependencies": {
     "@types/node": "^7.0.18",
-    "@types/p2": "^0.7.29",
-    "@types/pixi.js": "^4.4.4",
     "autoprefixer": "^6.7.2",
     "bootstrap": "^4.0.0-alpha.6",
     "chalk": "^1.1.3",
