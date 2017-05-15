@@ -1,16 +1,20 @@
 <template>
   <div id="app">
     <img src="./assets/images/logo.png">
+    <app-header></app-header>
     <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
   import Vue from "vue";
-  import Component from "vue-class-component"
+  import Component from "vue-class-component";
+  import Header from "@/components/header";
 
   @Component({
-    name: "App"
+    components: {
+      "app-header": Header,
+    },
   })
   export default class App extends Vue {}
 </script>

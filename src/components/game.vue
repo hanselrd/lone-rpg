@@ -10,14 +10,12 @@
   import Boot from "@/game/states/boot";
   import Preloader from "@/game/states/preloader";
   import MainMenu from "@/game/states/main-menu";
-  //import Play from "@/game/states/play";
+  // import Play from "@/game/states/play";
 
   import Vue from "vue";
   import Component from "vue-class-component";
 
-  @Component({
-    name: "Game"
-  })
+  @Component({})
   export default class Game extends Vue {
     public game: Phaser.Game = new Phaser.Game(window.innerWidth * window.devicePixelRatio,
           window.innerHeight * devicePixelRatio, Phaser.AUTO, this.$el);
