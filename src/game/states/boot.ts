@@ -2,7 +2,7 @@
 // import preloadBar from "@/assets/images/preload.png";
 
 export default class Boot extends Phaser.State {
-  public init() {
+  public init(): void {
     this.input.maxPointers = 1;
     this.stage.disableVisibilityChange = true;
 
@@ -15,12 +15,12 @@ export default class Boot extends Phaser.State {
     this.scale.pageAlignHorizontally = true;
   }
 
-  public preload() {
+  public preload(): void {
     // this.load.image("background", background);
     // this.load.image("preloadBar", preloadBar);
   }
 
-  public create() {
+  public create(): void {
     // this.state.start("preloader");
   }
 }

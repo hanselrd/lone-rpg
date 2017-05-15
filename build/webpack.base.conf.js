@@ -48,12 +48,7 @@ module.exports = {
         loader: 'expose-loader?p2'
       },
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
-      },
-      {
-        test: /\.(tsx?|vue)$/,
+        test: /\.tsx?$/,
         enforce: 'pre',
         loader: 'tslint-loader'
       },
@@ -61,13 +56,15 @@ module.exports = {
         test: /\.tsx?$/,
         loader: 'ts-loader',
         include: [resolve('src'), resolve('test')],
-        exclude: [
-          resolve('node_modules'),
-          //resolve('typings')
-        ],
+        exclude: resolve('node_modules'),
         options: {
           appendTsSuffixTo: [/\.vue$/]
         }
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: vueLoaderConfig
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

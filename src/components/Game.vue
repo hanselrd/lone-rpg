@@ -18,12 +18,11 @@
   @Component({
     name: "Game"
   })
-
   export default class Game extends Vue {
-    game: Phaser.Game = new Phaser.Game(window.innerWidth * window.devicePixelRatio,
+    public game: Phaser.Game = new Phaser.Game(window.innerWidth * window.devicePixelRatio,
           window.innerHeight * devicePixelRatio, Phaser.AUTO, this.$el);
 
-    mounted() {
+    public mounted(): void {
       if (this.game !== null) {
         this.game.state.add("Boot", new Boot());
         //this.game.state.add("Preloader", new Preloader());
@@ -33,7 +32,7 @@
       }
     }
 
-    destroyed() {
+    public destroyed(): void {
       this.game.destroy();
     }
   }
