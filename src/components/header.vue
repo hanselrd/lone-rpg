@@ -1,8 +1,27 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <router-link to="/">Home</router-link>
-    <router-link to="/game">Game</router-link>
+  <div id="header">
+    <b-alert variant="success" show>
+      <h4>{{msg}}</h4>
+      <p>Paragraph test 1</p>
+      <p class="mb-0">Paragraph test 2</p>
+    </b-alert>
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <router-link class="nav-link" :class="{ active: $route.path === '/' }" to="/">Home</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link class="nav-link" :class="{ active: $route.path === '/game' }" to="/game">Game</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link class="nav-link disabled" to="#">Login</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link class="nav-link disabled" to="#">Register</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link class="nav-link disabled" to="#">Settings</router-link>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -15,23 +34,3 @@
     public msg: string = "Header message";
   }
 </script>
-
-<style lang="scss" scoped>
-  h1, h2 {
-    font-weight: normal;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-
-  a {
-    color: #42b983;
-  }
-</style>

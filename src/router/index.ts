@@ -6,16 +6,15 @@ import Router from "vue-router";
 Vue.use(Router);
 
 export default new Router({
+  mode: "history",
   routes: [
-    /*{
-      component: Hello,
-      name: "Hello",
-      path: "/",
-    },*/
     {
       component: Game,
-      name: "Game",
       path: "/game",
+      props: {
+        width: 640,
+        height: 480,
+      },
     },
   ],
 });

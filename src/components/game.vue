@@ -15,10 +15,17 @@
   import Vue from "vue";
   import Component from "vue-class-component";
 
-  @Component({})
+  @Component({
+    props: {
+      width: Number,
+      height: Number,
+    },
+  })
   export default class Game extends Vue {
-    public game: Phaser.Game = new Phaser.Game(window.innerWidth * window.devicePixelRatio,
-          window.innerHeight * devicePixelRatio, Phaser.AUTO, this.$el);
+    public width: number;
+    public height: number;
+    public game: Phaser.Game = new Phaser.Game(this.width * window.devicePixelRatio,
+      this.height * window.devicePixelRatio, Phaser.AUTO, this.$el);
 
     public mounted(): void {
       if (this.game !== null) {
@@ -35,14 +42,3 @@
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  #game {
-    margin: 0 auto;
-  }
-
-  #game canvas {
-    display: block;
-    margin: 0 auto;
-  }
-</style>
