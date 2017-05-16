@@ -25,7 +25,7 @@
     public width: number;
     public height: number;
     public game: Phaser.Game = new Phaser.Game(this.width * window.devicePixelRatio,
-      this.height * window.devicePixelRatio, Phaser.AUTO, this.$el);
+      this.height * window.devicePixelRatio, Phaser.AUTO, "game");
 
     public mounted(): void {
       if (this.game !== null) {

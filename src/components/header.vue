@@ -1,5 +1,5 @@
 <template>
-  <div id="header">
+  <header>
     <b-alert variant="success" show>
       <h4>{{msg}}</h4>
       <p>Paragraph test 1</p>
@@ -22,7 +22,7 @@
         <router-link class="nav-link disabled" to="#">Settings</router-link>
       </li>
     </ul>
-  </div>
+  </header>
 </template>
 
 <script lang="ts">
