@@ -131,7 +131,7 @@
          "imageheight":526,
          "imagewidth":968,
          "margin":0,
-         "name":"Base",
+         "name":"base",
          "properties":
             {
 
@@ -147,7 +147,7 @@
          "imageheight":475,
          "imagewidth":628,
          "margin":0,
-         "name":"City",
+         "name":"city",
          "properties":
             {
 
