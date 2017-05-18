@@ -1,5 +1,5 @@
 <template>
-  <div id="game"></div>
+    <div id="game"></div>
 </template>
 
 <script lang="ts">
@@ -24,11 +24,12 @@
   export default class Game extends Vue {
     public width: number;
     public height: number;
-    public game: Phaser.Game = new Phaser.Game(this.width * window.devicePixelRatio,
-      this.height * window.devicePixelRatio, Phaser.AUTO, "game");
+    public game: Phaser.Game;
 
     public mounted(): void {
-      if (this.game !== null) {
+      if (!this.game) {
+        this.game = new Phaser.Game(this.$el.clientWidth * window.devicePixelRatio,
+          400, Phaser.AUTO, this.$el);
         this.game.state.add("boot", new Boot());
         this.game.state.add("preloader", new Preloader());
         this.game.state.add("main-menu", new MainMenu());

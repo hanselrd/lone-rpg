@@ -1,6 +1,6 @@
 <template>
-  <footer class="footer">
-    <div class="container">
+  <footer>
+    <div class="container text-center">
       <span class="text-muted">&copy 2017 hanselrd</span>
     </div>
   </footer>
