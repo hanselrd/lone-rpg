@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import * as Phaser from 'phaser-ce';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  game: Phaser.Game;
+
+  constructor() {
+    this.game = new Phaser.Game(640, 480, Phaser.AUTO, '#game');
+  }
 }
