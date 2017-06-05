@@ -1,0 +1,8 @@
+.navbar {
+  background-color: darkgreen;
+}
+
+.dropdown-menu a:hover {
+  background-color: darkgreen;
+  color: white;
+}

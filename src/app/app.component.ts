@@ -8,9 +8,4 @@ import * as Phaser from 'phaser-ce';
 })
 export class AppComponent {
   title = 'app';
-  game: Phaser.Game;
-
-  constructor() {
-    this.game = new Phaser.Game(640, 480, Phaser.AUTO, '#game');
-  }
 }
