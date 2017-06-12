@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-// testing only, figure out how to use a store
-import { Observable } from 'rxjs/Observable';
-import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,30 +8,28 @@ import { FlashMessagesService } from 'angular2-flash-messages';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  user: Observable<firebase.User>;
   constructor(
-    public afAuth: AngularFireAuth,
-    public flashMessage: FlashMessagesService) {
-    this.user = afAuth.authState;
-  }
+    private flashMessages: FlashMessagesService,
+    private auth: AuthService) {}
 
   ngOnInit() {
   }
 
   login() {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    this.auth.login('root@root.com', 'root00')
       .then(data => {
-        this.flashMessage.show(`Welcome ${this.user}`,
+        this.flashMessages.show(`Welcome ${this.auth.user}`,
          {
            cssClass: 'alert-info',
            timeout: 3000
          });
+         console.log(this.auth.user);
       });
   }
 
   logout() {
-    this.afAuth.auth.signOut();
-    this.flashMessage.show('You are logged out',
+    this.auth.logout();
+    this.flashMessages.show('You are logged out',
       {
         cssClass: 'alert-success',
         timeout: 3000

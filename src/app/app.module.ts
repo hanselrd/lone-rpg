@@ -15,6 +15,8 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
 
+import { AuthService } from './services/auth/auth.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +31,8 @@ import { HomeComponent } from './components/home/home.component';
   ],
   providers: [
     AngularFireAuth,
-    AngularFireDatabase
+    AngularFireDatabase,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })
